@@ -2,7 +2,7 @@
 
 session_start();
 $_SESSION = [];
-header('Location:  bienesraices/index.php');
+header('Location:  bienesraicesPOO/index.php');
 
 
 var_dump($_SESSION);

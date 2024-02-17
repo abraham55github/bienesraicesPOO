@@ -1,6 +1,6 @@
 <?php
 
-    require 'includes/config/database.php';
+    require './includes/app.php'; 
     $db = conectarBD();
 
     $errores = [];
@@ -30,7 +30,7 @@
                     $_SESSION['usuario'] = $usuario['email'];
                     $_SESSION['login'] = true;
 
-                    header('Location: /bienesraices/admin/index.php');
+                    header('Location: /bienesraicesPOO/admin/index.php');
 
 
                 }else{
@@ -45,7 +45,6 @@
     }
 
 
-    require './includes/funciones.php';
     incluirTemplate('header');
 ?>
 

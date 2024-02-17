@@ -6,8 +6,7 @@
         header('Location: index.php');
     }
 
-    //importar la conexion
-    require __DIR__ . '/includes/config/database.php';
+    require './includes/app.php';
     $db = conectarBD();
 
     //consulta
@@ -21,7 +20,7 @@
     $propiedad = mysqli_fetch_assoc($resultado);
     
 
-    require './includes/funciones.php';
+
     incluirTemplate('header');
 ?>
     <main class="contenedor seccion contenido-centrado">
