@@ -10,7 +10,7 @@
     <input type="file" id="imagen" accept="image/jpeg, image/png" name="propiedad[imagen]">
 
     <?php if($propiedad->imagen){ ?>
-        <img src="/bienesraicespoo/imagenes/<?php echo $propiedad->imagen ?>" class="imagen-small">
+        <img src="/bienesraicesPOO/imagenes/<?php echo $propiedad->imagen ?>" class="imagen-small">
 
     <?php }; ?>
 
@@ -34,12 +34,4 @@
 
 <fieldset>
     <legend>Vendedor</legend>
-    <select name="vendedores_id">
-        <option value="">--Seleccione--</option>
-        <?php while ($vendedor = mysqli_fetch_assoc($resultado)) : ?>
-            <option <?php echo $vendedores_id === $vendedor['id'] ? 'selected' : ''; ?> value="<?php echo s($propiedad->vendedor['id']); ?>">
-                <?php echo $vendedor['nombre'] . " " . $vendedor['apellido']; ?>
-            </option>
-        <?php endwhile; ?>
-    </select>
 </fieldset>

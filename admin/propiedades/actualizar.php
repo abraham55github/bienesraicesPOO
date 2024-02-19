@@ -1,5 +1,6 @@
 <?php
     use App\Propiedad;
+    use Intervention\Image\ImageManagerStatic as image;
 
     require '../../includes/app.php';
     
@@ -27,7 +28,7 @@
 
 
     //arreglo con mensajes de errores
-    $errores = [];
+    $errores = Propiedad::getErrores();
 
     
     //ejutar el codigo despues de que el usuario envia el formulario
@@ -39,91 +40,26 @@
 
         $propiedad->sincronizar($args);
 
-        debuguear($propiedad);
+        //validacion
+        $errores = $propiedad->validar();
 
-        //asignar files hacia una variable
-        $imagen = $_FILES['imagen'];
+        //subida de archivos
 
+        //Generar nombre unico
+        $nombreImagen = md5(uniqid(rand(), true)). ".jpg";
 
-        if(!$titulo){
-            $errores[] = "debes añadir un titulo";
-        }
-
-        if(!$precio){
-            $errores[] = "debes añadir un precio";
-        }
-
-        if( strlen($descripcion) < 50){
-            $errores[] = "La descripcion es obligatoria y debe tener menos de 50 caracteres";
-        }
-
-        if(!$habitaciones){
-            $errores[] = "debes añadir una habitacion";
-        }
-
-        if(!$wc){
-            $errores[] = "debes añadir un baño";
-        }
-
-        if(!$estacionamiento){
-            $errores[] = "debes añadir un estacionamiento";
-        }
-
-        if(!$vendedores_id){
-            $errores[] = "debes añadir un vendedor";
-        }
-
-
-        //Validar por tamaño
-        $medida = 1000 *1000;
-        if($imagen['size'] > $medida){
-            $errores[] = "la imagen es muy pesada";
+        if($_FILES['propiedad']['tmp_name']['imagen']){
+            $image = Image::make($_FILES['propiedad']['tmp_name']['imagen'])->fit(800,600);
+            $propiedad->setImagen($nombreImagen);
         }
 
 
         //revisar el arreglo de errores
         if(empty($errores)){
-            /* subida de archivos */
 
-            //crear carpeta
-            $carpetaImagenes = '../../imagenes/';
-
-            if (!is_dir($carpetaImagenes)){
-                mkdir($carpetaImagenes);
-               
-            }
-
-            $nombreImagen = '';
-
-            
-            if($imagen['name']){
-                //eliminar archivos
-                unlink($carpetaImagenes . $propiedad['imagen']);
-
-                //generar nombre unico
-                $nombreImagen = md5(uniqid(rand(), true)). ".jpg";
-
-                //Subir la imagen
-                move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImagen );
-
-            } else {
-                $nombreImagen = $propiedad['imagen'];
-            }
-            
-            //insertar en la base de datos
-            $query = "UPDATE propiedades SET titulo = '{$titulo}' , precio = {$precio}, 
-            imagen = '{$nombreImagen}' ,descripcion = '{$descripcion}', habitaciones = {$habitaciones}, wc = {$wc}, 
-            estacionamiento = {$estacionamiento}, vendedores_id = {$vendedores_id} WHERE id = {$id}; ";
-
-            //echo $query;
+           $propiedad->guardar();
 
 
-            $resultado = mysqli_query($db, $query);
-
-            if($resultado){
-               //redireccionar al usuario
-               header('Location: /bienesraices/admin/index.php?resultado=2');
-            }
         };
 
 
