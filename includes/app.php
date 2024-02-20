@@ -8,10 +8,10 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $db = conectarBD();
 
-use App\Propiedad;
+use App\ActiveRecord;
 use Intervention\Image\ImageManagerStatic as image;
 
-Propiedad::setDB($db);
+ActiveRecord::setDB($db);
 
 
 

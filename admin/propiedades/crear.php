@@ -2,19 +2,16 @@
     require '../../includes/app.php';
 
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManagerStatic as image;
 
     estaAutenticado();
 
-    $db = conectarBD();
-
+    // Crear el objeto
     $propiedad = new Propiedad;
 
-    //consultar para obtener los vendedores
-
-    $consulta = "SELECT * FROM vendedores";
-    $resultado = mysqli_query($db, $consulta);
-
+    //consulta para obtener todos lo vendedores
+    $vendedores = Vendedor::all();
 
     //arreglo con mensajes de errores
     $errores = Propiedad::getErrores();
@@ -23,19 +20,10 @@
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
        
-
         //crea una nueva instancia
         $propiedad = new Propiedad($_POST['propiedad']);
 
-
-
         /** SUBIDA DE ARCHIVOS **/
-        //crear carpeta
-        $carpetaImagenes = '../../imagenes/';
-        if (!is_dir($carpetaImagenes)){
-            mkdir($carpetaImagenes);
-        }
-        
         //Generar nombre unico
         $nombreImagen = md5(uniqid(rand(), true)). ".jpg";
 
@@ -51,6 +39,7 @@
         //validar errores
         $errores = $propiedad->validar();
 
+
         //revisar el arreglo de errores
         if(empty($errores)){
 
@@ -59,29 +48,14 @@
                 mkdir(CARPETA_IMAGENES);
             }
 
-
-            //asignar files hacia una variable
-            $imagen = $_FILES['imagen'];
-
             //guardar imagen
             $image->save(CARPETA_IMAGENES . $nombreImagen);
 
             //guarda en la base de datos
-            $resultado = $propiedad->guardar();
+            $propiedad->guardar();
 
-            //Mensaje de exito 
-            if($resultado){
-               //redireccionar al usuario
-               header('Location: /bienesraicesPOO/admin/index.php?resultado=1');
-            }
         };
 
-
-
-        /*  echo "<pre>";
-            var_dump($errores);
-            echo "</pre>"; */
-        
     }
 
 

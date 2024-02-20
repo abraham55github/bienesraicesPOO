@@ -1,9 +1,12 @@
 <?php
-    use App\Propiedad;
-    use Intervention\Image\ImageManagerStatic as image;
 
     require '../../includes/app.php';
-    
+    use App\Propiedad;
+    use App\Vendedor;
+
+    use Intervention\Image\ImageManagerStatic as image;
+
+
     estaAutenticado();
 
     //validar la url por id validate
@@ -19,13 +22,7 @@
     //consulta para obtener datos de propiedad
     $propiedad =  Propiedad::find($id);
 
-    // debuguear($propiedad);
-
-    //consultar para obtener los vendedores
-
-    $consulta = "SELECT * FROM vendedores";
-    $resultado = mysqli_query($db, $consulta);
-
+    $vendedores = Vendedor::all();
 
     //arreglo con mensajes de errores
     $errores = Propiedad::getErrores();
@@ -56,9 +53,12 @@
 
         //revisar el arreglo de errores
         if(empty($errores)){
-
-           $propiedad->guardar();
-
+            
+            // Almacenar la imagen
+            if($_FILES['propiedad']['tmp_name']['imagen']) {
+                $image->save(CARPETA_IMAGENES . $nombreImagen);
+            }
+            $propiedad->guardar();
 
         };
 

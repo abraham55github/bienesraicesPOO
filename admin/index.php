@@ -5,9 +5,11 @@
     estaAutenticado();
 
     use App\Propiedad;
+    use App\Vendedor;
 
     //implementar un metodo para obtener todas las propiedades
     $propiedades = Propiedad::all();
+    $vendedores = vendedor::all();
 
 
 
@@ -19,20 +21,10 @@
         $id = filter_var($id, FILTER_VALIDATE_INT);
 
         if($id){
-            //eliminar el archivo
-            $query = "SELECT imagen FROM propiedades WHERE id = {$id}";
+            $propiedad =  Propiedad::find($id);
 
-            $resultado = mysqli_query($db, $query);
-            $propiedad = mysqli_fetch_assoc($resultado);
+            $propiedad->eliminar();
 
-            unlink('../imagenes/' . $propiedad['imagen']);
-
-            //eliminar la propiedad
-            $query = "DELETE FROM propiedades WHERE id = {$id};";
-            $resultado = mysqli_query($db, $query);
-            if($resultado){
-                header('Location: /bienesraicesPOO/admin/index.php?resultado=3');
-            }
         }
     }
 
