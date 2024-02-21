@@ -73,6 +73,7 @@ class ActiveRecord{
         $query .= " WHERE id = '". self::$db->escape_string($this->id) . "' ";
         $query .= " LIMIT 1 ";
         
+
        $resultado = self::$db->query($query);
 
      
@@ -160,6 +161,16 @@ class ActiveRecord{
    
         $query = "SELECT * FROM ". static::$tabla;
 
+
+        $resultado = self::consultarSQL($query);
+
+        return $resultado;
+
+    }
+
+    //obtiene determinado numero de registros
+    public static function get($cantidad){
+        $query = "SELECT * FROM ". static::$tabla . " LIMIT " . $cantidad;
 
         $resultado = self::consultarSQL($query);
 
